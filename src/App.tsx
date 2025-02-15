@@ -1,32 +1,34 @@
 import React from "react";
 import "./App.css";
 
-const App: React.FC = () => {
-  // Função para converter a imagem para Base64
-  const convertImageToBase64 = (img: string) => {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const image = new Image();
-    
-    image.src = img;
-    
-    return new Promise<string>((resolve, reject) => {
-      image.onload = () => {
-        canvas.width = image.width;
-        canvas.height = image.height;
-        ctx?.drawImage(image, 0, 0);
-        resolve(canvas.toDataURL("image/jpeg"));
-      };
-      
-      image.onerror = reject;
-    });
-  };
+// Função para converter a imagem para Base64
+const convertImageToBase64 = (imgPath: string) => {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  const image = new Image();
 
+  // Caminho da imagem no public
+  image.src = imgPath;
+
+  return new Promise<string>((resolve, reject) => {
+    image.onload = () => {
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx?.drawImage(image, 0, 0);
+      resolve(canvas.toDataURL("image/jpeg"));
+    };
+
+    image.onerror = reject;
+  });
+};
+
+const App: React.FC = () => {
   const handleSaveContact = async () => {
     try {
-      // Caminho da imagem na pasta public (não será exibida na página)
+      // Usando o caminho da imagem na pasta public
       const base64Image = await convertImageToBase64("/foto.jpg");
 
+      // Gerando o conteúdo do vCard com a imagem embutida
       const vcfData = `BEGIN:VCARD
 VERSION:3.0
 FN:Caue Catone Silva
@@ -36,6 +38,7 @@ PHOTO;ENCODING=BASE64;TYPE=JPEG:${base64Image}
 URL:https://portifolio-caue.vercel.app
 END:VCARD`;
 
+      // Criando o Blob e gerando o link para download
       const blob = new Blob([vcfData], { type: "text/vcard" });
       const url = URL.createObjectURL(blob);
 
@@ -54,7 +57,6 @@ END:VCARD`;
   return (
     <div className="container">
       <div className="profile">
-        {/* Aqui não exibimos a imagem */}
         <h2>Caue Catone Silva</h2>
       </div>
 
