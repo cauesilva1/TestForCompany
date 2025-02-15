@@ -1,9 +1,6 @@
 import React from "react";
 import "./App.css";
 
-// Importe a imagem (adicione a sua foto ao diretório src ou public)
-import profileImage from "../public/foto.jpg";
-
 const App: React.FC = () => {
   // Função para converter a imagem para Base64
   const convertImageToBase64 = (img: string) => {
@@ -27,7 +24,8 @@ const App: React.FC = () => {
 
   const handleSaveContact = async () => {
     try {
-      const base64Image = await convertImageToBase64(profileImage);
+      // Caminho da imagem na pasta public (não será exibida na página)
+      const base64Image = await convertImageToBase64("/foto.jpg");
 
       const vcfData = `BEGIN:VCARD
 VERSION:3.0
@@ -56,7 +54,7 @@ END:VCARD`;
   return (
     <div className="container">
       <div className="profile">
-        <img src={profileImage} alt="Perfil" className="profile-img" />
+        {/* Aqui não exibimos a imagem */}
         <h2>Caue Catone Silva</h2>
       </div>
 
