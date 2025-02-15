@@ -1,32 +1,62 @@
 import React from "react";
 import "./App.css";
 
+// Importe a imagem (adicione a sua foto ao diretório src ou public)
+import profileImage from "../public/foto.jpg";
+
 const App: React.FC = () => {
-  // Dados do contato para o arquivo VCF
-  const handleSaveContact = () => {
-    const vcfData = `BEGIN:VCARD
+  // Função para converter a imagem para Base64
+  const convertImageToBase64 = (img: string) => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+    
+    image.src = img;
+    
+    return new Promise<string>((resolve, reject) => {
+      image.onload = () => {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx?.drawImage(image, 0, 0);
+        resolve(canvas.toDataURL("image/jpeg"));
+      };
+      
+      image.onerror = reject;
+    });
+  };
+
+  const handleSaveContact = async () => {
+    try {
+      const base64Image = await convertImageToBase64(profileImage);
+
+      const vcfData = `BEGIN:VCARD
 VERSION:3.0
 FN:Caue Catone Silva
 TEL:+55 99 99999-9999
 EMAIL:cauesilva@email.com
+PHOTO;ENCODING=BASE64;TYPE=JPEG:${base64Image}
 URL:https://portifolio-caue.vercel.app
 END:VCARD`;
 
-    const blob = new Blob([vcfData], { type: "text/vcard" });
-    const url = URL.createObjectURL(blob);
+      const blob = new Blob([vcfData], { type: "text/vcard" });
+      const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "caue-silva.vcf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "caue-silva.vcf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erro ao salvar o contato:", error);
+    }
   };
 
   return (
     <div className="container">
       <div className="profile">
+        <img src={profileImage} alt="Perfil" className="profile-img" />
         <h2>Caue Catone Silva</h2>
       </div>
 
