@@ -36,9 +36,11 @@ VERSION:3.0
 FN:Caue Catone Silva
 TEL:+55 99 99999-9999
 EMAIL:cauesilva@email.com
-PHOTO;ENCODING=BASE64;TYPE=JPEG:${base64Image}
+PHOTO;ENCODING=BASE64;TYPE=JPEG:${base64Image.split(',')[1]}
 URL:https://portifolio-caue.vercel.app
 END:VCARD`;
+
+      console.log(vcfData);
 
       // Criando o Blob e gerando o link para download
       const blob = new Blob([vcfData], { type: "text/vcard" });
