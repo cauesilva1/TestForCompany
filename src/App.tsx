@@ -6,8 +6,8 @@ const convertImageToBase64 = (imgPath: string) => {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   const image = new Image();
-
-  // Caminho da imagem no public
+  
+  // Caminho absoluto da imagem na pasta public
   image.src = imgPath;
 
   return new Promise<string>((resolve, reject) => {
@@ -25,8 +25,10 @@ const convertImageToBase64 = (imgPath: string) => {
 const App: React.FC = () => {
   const handleSaveContact = async () => {
     try {
-      // Usando o caminho da imagem na pasta public
+      // Caminho da imagem na pasta public
       const base64Image = await convertImageToBase64("/foto.jpg");
+
+      console.log(base64Image); // Verifique o valor de base64 no console
 
       // Gerando o conteúdo do vCard com a imagem embutida
       const vcfData = `BEGIN:VCARD
